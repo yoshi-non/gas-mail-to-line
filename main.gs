@@ -10,13 +10,29 @@ function onNewEmailReceived(e) {
 
     for (var j = 0; j < messages.length; j++) {
       var message = messages[j];
+      // subject:件名
       var subject = message.getSubject();
+      // sender:差出人
       var sender = message.getFrom();
+      // body:本文
       var body = message.getPlainBody();
-
+      var keywords = [
+        "ホームページから来店予約がありました。",
+        "ホームページから資料請求がありました。",
+        "イベントのお申し込みがありました.",
+      ];
+      var separator =
+        "---------------------------------------------------------------";
       // 特定の条件に基づいてメールをフィルタリングする場合は、ここに追加の条件を記述します
       if (subject === "特定の件名") {
-        sendLineNotification(subject, sender, body);
+        for (var k = 0; k < keywords.length; k++) {
+          if (
+            body.indexOf(keywords[k]) !== -1 &&
+            body.indexOf(separator) !== -1
+          ) {
+            sendLineNotification(subject, sender, body);
+          }
+        }
       }
     }
   }
@@ -26,13 +42,7 @@ function onNewEmailReceived(e) {
 
 // LINEに通知を送信する関数
 function sendLineNotification(subject, sender, body) {
-  var message =
-    "メールが届きました！\n\n件名: " +
-    subject +
-    "\n差出人: " +
-    sender +
-    "\n本文: " +
-    body;
+  var message = body;
 
   var formData = {
     message: message,

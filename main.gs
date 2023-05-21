@@ -24,12 +24,13 @@ function onNewEmailReceived(e) {
       var separator =
         "---------------------------------------------------------------";
       // 特定の条件に基づいてメールをフィルタリングする場合は、ここに追加の条件を記述します
-      if (subject === "特定の件名") {
+      if (
+        subject.includes("に参加予約がありました") ||
+        subject.includes("ホームページから資料請求がありました") ||
+        subject.includes("ホームページから来店予約がありました")
+      ) {
         for (var k = 0; k < keywords.length; k++) {
-          if (
-            body.indexOf(keywords[k]) !== -1 &&
-            body.indexOf(separator) !== -1
-          ) {
+          if (body.includes(keywords[k])) {
             sendLineNotification(subject, sender, body);
           }
         }
